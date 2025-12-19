@@ -1,0 +1,11 @@
+
+__pycache__/
+.ipynb_checkpoints/
+data/*/train/
+data/*/test/
+data/*/val/
+
+
+# avoid licensing shenanigans
+data/*/cif
+**/*.cif
