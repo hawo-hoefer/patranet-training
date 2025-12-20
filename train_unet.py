@@ -38,11 +38,13 @@ def add_noise(
     X += noise
     # Scale by X range
 
-    Y -= X.min(dim=-1, keepdim=True).values
-    X -= X.min(dim=-1, keepdim=True).values
+    xmin = X.min(dim=-1, keepdim=True).values
+    Y -= xmin
+    X -= xmin
 
-    Y /= X.max(dim=-1, keepdim=True).values
-    X /= X.max(dim=-1, keepdim=True).values
+    xmax = X.max(dim=-1, keepdim=True).values
+    Y /= xmax
+    X /= xmax
 
     return X, Y
 
@@ -122,7 +124,7 @@ def train_model(
     if not os.path.exists(training_results_path):
         os.makedirs(training_results_path)
 
-    train_loader, val_loader, train_len, val_len = get_dataloaders(ds_path, 256)
+    train_loader, val_loader, train_len, val_len = get_dataloaders(ds_path, 1024)
     example_inputs, _ = next(iter(train_loader))
     model = (
         UnetConverter(
@@ -232,7 +234,7 @@ if __name__ == "__main__":
     train_model(
         learning_rate=5e-3,
         epochs=20,
-        kernel_sizes=[3, 5, 7, 9],
+        kernel_sizes=[3, 3, 3, 3],
         inner_linear=True,
         channel_factor=4,
     )

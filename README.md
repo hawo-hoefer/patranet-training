@@ -46,3 +46,8 @@ Then, train the network using
 python3 ./train_unet.py
 ```
 
+The plots from the paper can be generated using
+
+```commandline
+python3 ./generate_plots.py
+```

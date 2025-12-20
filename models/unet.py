@@ -71,7 +71,7 @@ class UnetConverter(nn.Module):
 
         self.out = nn.Sequential(
             nn.Conv1d(f, 1, 1, padding=0),
-            nn.Sigmoid()
+            nn.LeakyReLU()
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
