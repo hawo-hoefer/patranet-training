@@ -191,8 +191,8 @@ plt.ylabel(r"$\mathrm{I}\ [\mathrm{a.u.}]$%")
 plt.xlabel(r"$2\theta\ [\mathrm{deg}]$")
 plt.yticks([])
 
-orig_rect = (34, 38, 0.5, 1.01)
-dst_rect = (10, 25, 0.4, 1.01)
+orig_rect = (34, 38, 0.5, 1.00)
+dst_rect = (10, 25, 0.4, 1.00)
 draw_zoom_lines(orig_rect, dst_rect, plt.gca())
 plt.annotate("", xy=(dst_rect[1] + 1, dst_rect[3] - 0.05), xytext=(orig_rect[0] - 1, 0.975),
              arrowprops=dict(arrowstyle="->", connectionstyle="arc,rad=-0.2"))
