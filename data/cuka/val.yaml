@@ -20,7 +20,7 @@ kind: !AngleDispersive
       - [-1.0, 1.0]
       - [-1.0, 1.0]
       - [-1.0, 1.0]
-    scale: [0.001, 420]
+    scale: [0, 420]
 sample_parameters:
   structure_permutations: 10000
   concentration_subset: [1, 7]
@@ -37,5 +37,5 @@ sample_parameters:
 simulation_parameters:
   normalize: false
   seed: 4567
-  n_patterns: 200000
+  n_patterns: 400000
   abstol: 1e-3

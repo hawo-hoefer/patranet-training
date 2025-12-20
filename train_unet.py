@@ -33,14 +33,15 @@ def add_noise(
     X = torch.tensor(X, dtype=TORCH_DTYPE).unsqueeze(1)
     Y = torch.tensor(Y, dtype=TORCH_DTYPE).unsqueeze(1)
     noise_scale = torch.rand(size=[X.shape[0], 1, 1]) * noise_amt
-    noise = (torch.rand(size=X.shape, generator=generator) - 0.5) * noise_scale
+    noise = torch.randn(size=X.shape, generator=generator) * noise_scale
 
     X += noise
     # Scale by X range
-    Y -= X.min(dim=-1, keepdim=True).values
-    Y /= X.max(dim=-1, keepdim=True).values
 
+    Y -= X.min(dim=-1, keepdim=True).values
     X -= X.min(dim=-1, keepdim=True).values
+
+    Y /= X.max(dim=-1, keepdim=True).values
     X /= X.max(dim=-1, keepdim=True).values
 
     return X, Y
@@ -121,13 +122,14 @@ def train_model(
     if not os.path.exists(training_results_path):
         os.makedirs(training_results_path)
 
-    train_loader, val_loader, train_len, val_len = get_dataloaders(ds_path, 1024)
+    train_loader, val_loader, train_len, val_len = get_dataloaders(ds_path, 256)
+    example_inputs, _ = next(iter(train_loader))
     model = (
         UnetConverter(
             kernel_sizes=kernel_sizes,
             channel_factor=channel_factor,
             inner_linear=inner_linear,
-            in_size=2048,
+            in_size=example_inputs.shape[-1],
         )
         .cuda()
         .to(TORCH_DTYPE)
@@ -135,7 +137,7 @@ def train_model(
 
     opt = torch.optim.Adam(model.parameters(), lr=learning_rate)
     sched = torch.optim.lr_scheduler.ReduceLROnPlateau(
-        opt, threshold=1e-2, threshold_mode="rel", patience=3
+        opt, threshold=2e-2, threshold_mode="rel", patience=3
     )
     should_stop = EarlyStopping(patience=10, rel_thresh=1e-3)
 
@@ -228,9 +230,9 @@ def train_model(
 
 if __name__ == "__main__":
     train_model(
-        learning_rate=5e-2,
+        learning_rate=5e-3,
         epochs=20,
-        kernel_sizes=[3, 3, 3, 3, 3],
+        kernel_sizes=[3, 5, 7, 9],
         inner_linear=True,
-        channel_factor=1,
+        channel_factor=4,
     )
